@@ -26,8 +26,6 @@ This command will build required images and start the containers. Execute docker
 as shown in the picture below to verify that kafka and application containers are running
 as expected.
 
-![img.png](img.png)![img_1.png](img_1.png)
-
 3. Now that we've got all the required containers running, we need to create input and output 
 Kafka topics. Please execute following two commands to achieve this -
 
@@ -58,6 +56,8 @@ picture below -
 
 ![img_1.png](img_1.png)
 
+In this case, we've entered 4 messages to the window. 
+
 2. Open a different terminal window/tab and start consumer as follows -
 
         sudo docker exec --interactive --tty etlapp_broker_1 \
@@ -67,12 +67,14 @@ picture below -
                                
 As soon as the consumer starts, we should be able to see all the messages sent by the 
 producer in the consumer window as shown in the picture below. Notice all the messages
-appear in the consumer window as the original messages published in producer window.
+appear in the consumer window exactly same as the original messages published in the 
+producer window.
 
 ![img_3.png](img_3.png)
 
 From this time onwards, any new message published by producer will appear in the consumer
-window in an automatic fashion.
+window in an automatic fashion. We can close this consumer now by Ctrl+C command. 
+
 3. Now that we've verified producer/consumer workflow is working as expected, we'll check if
 our Python application has ingested and processed these messages as well. For this, we can simply 
 check if the processed messages have arrived in the output topic (output_topic).
@@ -87,3 +89,9 @@ check if the processed messages have arrived in the output topic (output_topic).
 Please notice that messages are processed as expected (all the local timestamps are converted to
 UTC and messages without timestamp are dropped and aren't passed to output topic and hence 
 they don't appear in this consumer window).
+5. To stop the producer we can use Ctrl+D command. 
+To stop the containers, we can use the following command - 
+
+            sudo docker stop <container_id> 
+    
+Container ID can be found from docker ps command as mentioned in te 
