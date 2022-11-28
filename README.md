@@ -1,4 +1,6 @@
-# kafka-etl-app
+# kafka-etl-app 
+(Submitted by Basant Khati)
+
 This application ingests messages from a Kafka topic, processes them and sends to another
 Kafka sink topic. Original messages are in the following format-
 
@@ -96,4 +98,4 @@ To stop the containers, we can use the following command -
 
             sudo docker stop <container_id> 
     
-Container ID can be found from docker ps command as mentioned in te 
+Container ID can be found from docker ps command as mentioned in step (2) of Setup steps.
