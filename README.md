@@ -26,6 +26,8 @@ This command will build required images and start the containers. Execute docker
 as shown in the picture below to verify that kafka and application containers are running
 as expected.
 
+![img_5.png](img_5.png)
+
 3. Now that we've got all the required containers running, we need to create input and output 
 Kafka topics. Please execute following two commands to achieve this -
 
