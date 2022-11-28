@@ -26,7 +26,7 @@ This command will build required images and start the containers. Execute docker
 as shown in the picture below to verify that kafka and application containers are running
 as expected.
 
-![img_5.png](img_5.png)
+![img_5.png](resources/img_5.png)
 
 3. Now that we've got all the required containers running, we need to create input and output 
 Kafka topics. Please execute following two commands to achieve this -
@@ -56,7 +56,7 @@ input topic -
 This will start the producer. We can enter/paste test messages to the window as shown in the 
 picture below -
 
-![img_1.png](img_1.png)
+![img_1.png](resources/img_1.png)
 
 In this case, we've entered 4 messages to the window. 
 
@@ -72,7 +72,7 @@ producer in the consumer window as shown in the picture below. Notice all the me
 appear in the consumer window exactly same as the original messages published in the 
 producer window.
 
-![img_3.png](img_3.png)
+![img_3.png](resources/img_3.png)
 
 From this time onwards, any new message published by producer will appear in the consumer
 window in an automatic fashion. We can close this consumer now by Ctrl+C command. 
@@ -86,7 +86,7 @@ check if the processed messages have arrived in the output topic (output_topic).
                                --topic output_topic \                   
                                --from-beginning
                                
-![img_2.png](img_2.png)
+![img_2.png](resources/img_2.png)
 
 Please notice that messages are processed as expected (all the local timestamps are converted to
 UTC and messages without timestamp are dropped and aren't passed to output topic and hence 
