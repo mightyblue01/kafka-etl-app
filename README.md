@@ -1,7 +1,7 @@
 # kafka-etl-app 
 (Submitted by Basant Khati)
 
-This application ingests messages from a Kafka topic, processes them and sends to another
+This application ingests messages from a Kafka topic, processes them and publishes to another
 Kafka sink topic. Original messages are in the following format-
 
     {"myKey": 1, "myTimestamp": "2022-03-01T09:11:04+01:00"}

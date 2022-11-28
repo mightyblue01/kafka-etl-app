@@ -1,5 +1,12 @@
+##############################################################################
+# This script ingests messages from a given Kafka input topic and transforms
+# message timestamps from local timezone to UTC and publishes the updated
+# messages to another output topic.
+##############################################################################
+# Submitted by Basant Khati
+##############################################################################
+
 from kafka import KafkaConsumer, KafkaProducer
-import sys
 import os
 from datetime import datetime
 from dateutil import tz
@@ -56,9 +63,6 @@ def process_messages(input_topic, output_topic):
         # check if final message has both the keys (myKey, myTimestamp)
         if len(json_msg) == 2:
             write_message_to_output_topic(json_msg, output_topic)
-
-    # Terminate the script
-    #sys.exit()
 
 
 if __name__ == "__main__":
