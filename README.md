@@ -96,4 +96,4 @@ To stop the containers, we can use the following command -
 
             sudo docker stop <container_id> 
     
-Container ID can be found from docker ps command as mentioned in te 
+Container ID can be found from docker ps command as mentioned in step (2) of Setup steps.
