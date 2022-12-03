@@ -1,5 +1,5 @@
 # kafka-etl-app 
-(Submitted by Basant Khati)
+(Created by Basant Khati)
 
 This application ingests messages from a Kafka topic, processes them and publishes to another
 Kafka sink topic. A couple of sample messages are as follows -
