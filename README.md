@@ -27,11 +27,11 @@ following command -
 
         sudo docker-compose up -d
     
-This command will build required images and start the containers. Execute docker command
-as shown in the picture below to verify that kafka and application containers are running
-as expected.
+   This command will build required images and start the containers. Execute docker command
+   as shown in the picture below to verify that kafka and application containers are running
+   as expected.
 
-![img_5.png](resources/img_5.png)
+   ![img_5.png](resources/img_5.png)
 
 3. Now that we've got all the required containers running, we need to create input and output 
 Kafka topics. Please execute following two commands to achieve this -
@@ -46,7 +46,7 @@ Kafka topics. Please execute following two commands to achieve this -
                      --create \
                      --topic output_topic
 
-Now setup is ready to ingest and process the messages.
+   Now setup is ready to ingest and process the messages.
 
 ### Test the setup
 1. First, we'll verify if Kafka containers are working as expected. For this, we 
@@ -58,12 +58,12 @@ input topic -
         kafka-console-producer --bootstrap-server broker:9092 \
                                --topic input_topic
                                
-This will start the producer. We can enter/paste test messages to the window as shown in the 
+   This will start the producer. We can enter/paste test messages to the window as shown in the 
 picture below -
 
-![img_1.png](resources/img_1.png)
+   ![img_1.png](resources/img_1.png)
 
-In this case, we've entered 4 messages to the window. 
+   In this case, we've entered 4 messages to the window. 
 
 2. Open a different terminal window/tab and start consumer as follows -
 
@@ -72,18 +72,18 @@ In this case, we've entered 4 messages to the window.
                                --topic input_topic \                   
                                --from-beginning
                                
-As soon as the consumer starts, we should be able to see all the messages sent by the 
-producer in the consumer window as shown in the picture below. Notice all the messages
-appear in the consumer window exactly same as the original messages published in the 
-producer window.
+   As soon as the consumer starts, we should be able to see all the messages sent by the 
+   producer in the consumer window as shown in the picture below. Notice all the messages
+   appear in the consumer window exactly same as the original messages published in the 
+   producer window.
 
-![img_3.png](resources/img_3.png)
+   ![img_3.png](resources/img_3.png)
 
-From this time onwards, any new message published by producer will appear in the consumer
-window in an automatic fashion. We can now close the producer with Ctrl+D and consumer with 
-Ctrl+C command. 
+   From this time onwards, any new message published by producer will appear in the consumer
+   window in an automatic fashion. We can now close the producer with Ctrl+D and consumer with 
+   Ctrl+C command. 
 
-# Verify the app with provided script
+### Verify the app with provided script
 Source code contains a script verify_etl_app.sh which can be used to verify that the application
 works as expected. User only needs to execute this script from a terminal and rest of the process 
 is automated. Steps are as follows:
