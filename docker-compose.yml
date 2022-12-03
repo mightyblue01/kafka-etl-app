@@ -33,6 +33,5 @@ services:
     depends_on:
       - zookeeper
       - broker
-    volumes:
-      - $PWD:/app
+
 
