@@ -16,10 +16,18 @@ converts them to UTC time and publishes updated messages to a different Kafka to
 Timezone conversion logic is generic and can handle any local timezone to UTC conversion. Any messages with missing 
 key "myTimestamp" or with invalid timestamp are dropped.
 
+### Quickstart 
+1. Download source code and execute the script "verify_etl_app.sh" from a terminal inside source code root directory.
+2. Compare resulting output file "processed_messages.txt" with input file "resources/sample_messages.txt".
+   All the message in the input file will be appropriately processed with converted timezone (UTC). Invalid 
+   messages will be dropped.
+
+For further information on the setup and other details, please refer to the following sections-
+
 ### Setup steps
 1. First step is to download this source code to a local directory. Also, please make sure 
 that local system has docker installed and system is connected to the internet. In a real
-production environment, all the necessary libraries will be downloaded from pre built local 
+production environment, all the necessary libraries will be downloaded from pre-built local 
 artifactory as the corporate firewalls will block internet connectivity. However, for this 
 use case, we assume that this is a sandbox environment where internet access is allowed. 
 2. Open a terminal window at the source code directory created in step 1 and execute the 
