@@ -5,12 +5,13 @@
 ##############################################################################
 # Submitted by Basant Khati
 ##############################################################################
-
+from json import JSONDecodeError
 from kafka import KafkaConsumer, KafkaProducer
-import os
+from kafka.errors import KafkaError
 from datetime import datetime
 from dateutil import tz
 import json
+import os
 
 INPUT_TOPIC = os.environ.get('KAFKA_INPUT_TOPIC')
 OUTPUT_TOPIC = os.environ.get('KAFKA_OUTPUT_TOPIC')
@@ -20,50 +21,73 @@ to_zone = tz.tzutc()
 from_zone = tz.tzlocal()
 
 
-def write_message_to_output_topic(json_msg, output_topic):
-    producer = KafkaProducer(
-                bootstrap_servers=KAFKA_BROKER_URL,
-                value_serializer=lambda value: json.dumps(value).encode(),
-            )
-    producer.send(output_topic,
-                  json_msg)
+def write_message_to_topic(json_msg):
+    try:
+        producer = KafkaProducer(
+                    bootstrap_servers=KAFKA_BROKER_URL,
+                    value_serializer=lambda value: json.dumps(value).encode(),
+                )
+        producer.send(OUTPUT_TOPIC,
+                      json_msg)
+
+    except KafkaError as e:
+        print(f'Kafka Producer - Exception during publishing message - {e}')
+    except Exception as e:
+        print(f'exception- {e}')
+
+
+def read_messages_from_topic():
+    try:
+        consumer = KafkaConsumer(
+                        INPUT_TOPIC,
+                        group_id='group2',
+                        bootstrap_servers=KAFKA_BROKER_URL,
+                    )
+        # Read messages from consumer
+        for msg in consumer:
+            try:
+                json_str = json.loads(msg.value)
+
+            except JSONDecodeError as e:
+                print(f'JSON error in loading message - {e}; message - {msg}')
+                continue
+
+            if process_message(json_str) is not None:
+                write_message_to_topic(json_str)
+
+    except KafkaError as e:
+        print(f'Kafka consumer - Exception during consuming message - {e}; '
+              f'message - {msg}')
+
+    except JSONDecodeError as e:
+        print(f'JSONDecodeError - error loading message - {e}; '
+              f'message - {msg}')
+
+    except Exception as e:
+        print(f'exception {e}; message - {msg}')
 
 
 # read messages from input topic and process them
 # e.g. convert to utc
-def process_messages(input_topic, output_topic):
-    # Initialize consumer variable
-    #print(f'input topic {input_topic}, output topic {output_topic}')
-    consumer = KafkaConsumer(
-                    input_topic,
-                    group_id='group2',
-                    bootstrap_servers=KAFKA_BROKER_URL,
-                    api_version=(2, 0, 2)
-                )
+def process_message(json_mesg):
+    transformed_msg = None
+    try:
+        # check if required key exists
+        if "myTimestamp" in json_mesg:
+            local = datetime.strptime(json_mesg["myTimestamp"], '%Y-%m-%dT%H:%M:%S%z')
+            json_mesg["myTimestamp"] = datetime.strftime(local.astimezone(to_zone),
+                                                 '%Y-%m-%dT%H:%M:%S%z')
+            transformed_msg = json_mesg
+            return transformed_msg
 
-    # Read messages from consumer
-    for msg in consumer:
-        json_str = json.loads(msg.value)
-        json_msg = {}
+    except ValueError as e:
+        print(f'ValueError - {e}; message - {json_mesg}')
 
-        for key, val in json_str.items():
-            if key == "myTimestamp":
-                # check for msgs with empty value as provided in on of the
-                # samples, further checks can be added here to handle other
-                # types of malformed messages
-                if val != '':
-                    local = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S%z')
-                    json_msg[key] = datetime.strftime(local.astimezone(to_zone),
-                                            '%Y-%m-%dT%H:%M:%S%z')
-                else:
-                    print('dropping msg with empty value where key is {key}')
-                    continue
-            else:
-                json_msg[key] = val
-        # check if final message has both the keys (myKey, myTimestamp)
-        if len(json_msg) == 2:
-            write_message_to_output_topic(json_msg, output_topic)
+    except Exception as e:
+        print(f'exception {e}; message - {json_mesg}')
+
+    return transformed_msg
 
 
 if __name__ == "__main__":
-    process_messages(INPUT_TOPIC, OUTPUT_TOPIC)
+    read_messages_from_topic()

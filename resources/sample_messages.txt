@@ -1,0 +1,10 @@
+{"myKey": 1, "myTimestamp": "2022-03-01T09:11:04+01:00"}
+{"myKey": 2, "key2": 15, "key3": "xyz", "key4": 56, "myTimestamp": "2022-03-01T09:14:05+01:00", "key5": 12}
+{"myKey": 3, "myTimestamp": "2022-03-01T09:12:08+01:00", "key2": "2022-03-01"}
+{"myKey": 4, "myTimestamp": "2022-03-01T09:13:12+01:00"}
+{"myKey": 5, "myTimestamp": ""}
+{"myKey": 6, "myTimestamp": "2022-03-01T09:14:05+01:00"}
+an invalid message
+"some other invalid message"
+{"myTimestamp": "2022-03-01T09:12:08+01:00", "myKey": 7,  "key2": "2022-03-01"}
+{"myTimestamp": "2022-03-01T09:12:08+01:00", "myKey": 8,  "key2": "2022-03-01"}

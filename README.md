@@ -2,16 +2,19 @@
 (Submitted by Basant Khati)
 
 This application ingests messages from a Kafka topic, processes them and publishes to another
-Kafka sink topic. Original messages are in the following format-
+Kafka sink topic. A couple of sample messages are as follows -
 
     {"myKey": 1, "myTimestamp": "2022-03-01T09:11:04+01:00"}
+    {"myKey": 2, "key2": 15, "key3": "xyz", "key4": 56, "myTimestamp": "2022-03-01T09:14:05+01:00", "key5": 12}
 
-Timestamp field shown above is in a local timezone (e.g. Europe/Berlin) and this app converts
-it to UTC time and pushes updated messages to a different Kafka topic in the following format -
+Timestamp fields shown above(for the key "myTimestamp") are in a local timezone (e.g. Europe/Berlin) and this app 
+converts them to UTC time and publishes updated messages to a different Kafka topic as follows -
 
     {"myKey": 1, "myTimestamp": "2022-03-01T08:11:04+00:00"}
+    {"myKey": 2, "key2": 15, "key3": "xyz", "key4": 56, "myTimestamp": "2022-03-01T08:14:05+0000", "key5": 12}
 
-Timezone conversion logic is generic and can handle any local timezone to UTC conversion. 
+Timezone conversion logic is generic and can handle any local timezone to UTC conversion. Any messages with missing 
+key "myTimestamp" or with invalid timestamp are dropped.
 
 ### Setup steps
 1. First step is to download this source code to a local directory. Also, please make sure 
@@ -45,8 +48,8 @@ Kafka topics. Please execute following two commands to achieve this -
 
 Now setup is ready to ingest and process the messages.
 
-## Test steps
-1. First of all, we'll verify if Kafka containers are working as expected. For this, we 
+### Test the setup
+1. First, we'll verify if Kafka containers are working as expected. For this, we 
 will push some test messages to input topic using Kafka producer and verify if they can be 
 consumed by Kafka consumer. Please use the following command to push test messages to the
 input topic - 
@@ -77,23 +80,31 @@ producer window.
 ![img_3.png](resources/img_3.png)
 
 From this time onwards, any new message published by producer will appear in the consumer
-window in an automatic fashion. We can close this consumer now by Ctrl+C command. 
+window in an automatic fashion. We can now close the producer with Ctrl+D and consumer with 
+Ctrl+C command. 
 
-3. Now that we've verified producer/consumer workflow is working as expected, we'll check if
-our Python application has ingested and processed these messages as well. For this, we can simply 
-check if the processed messages have arrived in the output topic (output_topic).
+# Verify the app with provided script
+Source code contains a script verify_etl_app.sh which can be used to verify that the application
+works as expected. User only needs to execute this script from a terminal and rest of the process 
+is automated. Steps are as follows:
+1. Open a terminal in the root directory of this source code in the local system.
+2. Execute shell script "verify_etl_app.sh" on the terminal. 
 
-        sudo docker exec --interactive --tty etlapp_broker_1 \
-        kafka-console-consumer --bootstrap-server broker:9092 \
-                               --topic output_topic \                   
-                               --from-beginning
-                               
-![img_2.png](resources/img_2.png)
+      _This script first starts kafka producer container and publishes some messages from the file 
+      "resources/sample_messages.txt" to the topic input_topic. kafka-etl-app in the background consumes 
+      these messages from input_topic and processes them while applying appropriate timestamp changes 
+      (local timezone to UTC) and publishes to the topic output_topic.
+      Next, a consumer is started which reads messages published on output_topic and these messages are
+      dumped on an output file "processed_messages.json" separated with new line character._ 
+   
+3. Script will print how many messages got processed before exiting. Afterwards, one can open the
+   output file "processed_messages.txt" and compare it with the contents of original file 
+   "resources/sample_messages.txt". One should notice that all the timestamps associated with key 
+   "myTimestamp" are transformed from local time to UTC time. Also, any invalid (non json) messages
+   or messages without "myTimestamp" key or malformed timestamp will be dropped and won't appear in
+   the output file.
 
-Please notice that messages are processed as expected (all the local timestamps are converted to
-UTC and messages without timestamp are dropped and aren't passed to output topic and hence 
-they don't appear in this consumer window).
-5. To stop the producer we can use Ctrl+D command. 
+4. To stop the producer we can use Ctrl+D command. 
 To stop the containers, we can use the following command - 
 
             sudo docker stop <container_id> 
